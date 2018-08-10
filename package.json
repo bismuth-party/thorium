@@ -1,0 +1,32 @@
+{
+  "name": "thorium",
+  "version": "1.0.0",
+  "description": "The backend of the Wismut bot",
+  "main": "index.ts",
+  "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/compression": "0.0.36",
+    "@types/cson": "0.0.31",
+    "@types/express": "^4.16.0",
+    "@types/node": "^10.5.7",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cson": "^5.1.0",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "ts-node index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bismuth-party/thorium.git"
+  },
+  "author": "bismuth-party",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/bismuth-party/thorium/issues"
+  },
+  "homepage": "https://github.com/bismuth-party/thorium#readme"
+}

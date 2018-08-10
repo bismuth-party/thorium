@@ -1,3 +1,9 @@
+# ALL /<BOT_TOKEN>/ping
+Check if the connection works
+
+Always responds with `{ ok: true }`
+
+
 # POST /<BOT_TOKEN>/message
 Has to be called whenever a message gets sent
 
@@ -49,9 +55,9 @@ Has to be called whenever the chat gets a new photo
 
 ```
 {
-	chatid: int		The ID of the chat
-	userid: int		The ID of the user that changed the photo
-	photo: Photo	The new chat photo
+	chatid: int			The ID of the chat
+	userid: int			The ID of the user that changed the photo
+	photo: PhotoData	The new chat photo
 }
 ```
 

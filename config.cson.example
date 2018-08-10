@@ -1,0 +1,2 @@
+port: 8467
+bot_token: 'Enter a long and unique string here to make sure only the bot can add data'

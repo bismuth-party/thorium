@@ -25,8 +25,8 @@ Example:
 `text: string`  The text of the message
 
 ## Audio = 1
-`file_id: string`  
 `caption: ?string`  
+`file_id: string`  
 `duration: int`  
 `performer: ?string`  
 `title: ?string`  
@@ -41,7 +41,7 @@ Example:
 `file_size: ?int`  
 
 ## Animation = 3
-`caption: string`  												AVAILABLE ???
+`caption: ?string`  												AVAILABLE ???  
 `file_id: string`  
 `duration: int`  
 `file_name: ?string`  
@@ -107,7 +107,7 @@ Example:
 `language_code: ?string`  
 
 
-# Photo
+# PhotoData
 `file_id: string`  
 `width: int`  
 `height: int`  
