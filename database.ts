@@ -1,47 +1,20 @@
 import * as types from './types';
 
-const CHAT_PREFIX = 'chat/';
+export const CHAT_PREFIX = 'chat/';
 
+export abstract class Database {
+	uuid: string;
 
-class Database {
-	data: object = {};
-
-	set(key: string, value): void {
-		this.data[key] = value;
+	constructor() {
+		this.uuid = Math.floor((1 << 16) * (Math.random() + 1)).toString(16);
 	}
 
-	get(key: string) {
-		return this.data[key];
-	}
+	abstract set(key: string, value: any): void;
+	abstract get(key: string): any;
 
-
-	getChat(chatid: number): types.Chat {
-		return <types.Chat> this.get(CHAT_PREFIX + chatid);
-	}
-
-	chatExists(chatid: number): boolean {
-		return typeof this.get(CHAT_PREFIX + chatid) !== 'undefined';
-	}
-
-
-	editChat(chatid: number, edit: (_:types.Chat) => void) {
-		// Get chat
-		let chat = this.get(CHAT_PREFIX + chatid);
-
-		// Create new one if it doesn't exist
-		if (typeof chat === 'undefined') {
-			chat = <types.Chat> {
-				history: [],
-			};
-		}
-
-		// Let the chat be edited
-		edit(chat);
-
-		// Store chat back in database
-		this.set(CHAT_PREFIX + chatid, chat);
-	}
+	abstract getChat(chatid: number): types.Chat;
+	abstract setChat(chatid: number, chat: types.Chat): void;
+	abstract chatExists(chatid: number): boolean;
+	abstract editChat(chatid: number, edit: (_:types.Chat) => void): void;
+	abstract addHistory(chatid: number, history: types.History): void;
 }
-
-
-export default new Database();

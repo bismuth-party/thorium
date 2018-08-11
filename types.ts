@@ -1,3 +1,6 @@
+import { Validate, validate, validate_optional } from './validate';
+
+
 export enum MessageType {
 	Text,
 	Audio,
@@ -14,9 +17,12 @@ export enum MessageType {
 	Venue,
 }
 
-export interface Message {
+export class Message extends Validate {
+	@validate
 	type: MessageType;
-	content;
+
+	@validate
+	content: any;
 }
 
 
@@ -30,13 +36,55 @@ export enum HistoryType {
 	ChatUpdate_DeleteChatPhoto,
 }
 
-export interface History {
+export class History extends Validate {
+	@validate
 	type: HistoryType;
+
+	@validate
 	userid: number;
-	content;
+
+	@validate
+	content: any;
 }
 
 
-export interface Chat {
+export class User extends Validate {
+	@validate
+	id: number;
+
+	@validate
+	is_bot: boolean;
+
+	@validate
+	first_name: string;
+
+	@validate_optional
+	last_name?: string;
+
+	@validate_optional
+	username?: string;
+
+	@validate_optional
+	langauge_code?: string;
+}
+
+
+export class PhotoData extends Validate {
+	@validate
+	file_id: string;
+
+	@validate
+	width: number;
+
+	@validate
+	height: number;
+
+	@validate_optional
+	file_size?: number;
+}
+
+
+export class Chat extends Validate {
+	@validate
 	history: History[];
 }

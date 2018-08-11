@@ -11,8 +11,7 @@ Has to be called whenever a message gets sent
 {
 	chatid: int		The ID of the chat where the message got sent
 	userid: int		The ID of the user that sent the message
-
-	message: Message	the message that was sent
+	message: Message	The message that was sent
 }
 ```
 

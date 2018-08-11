@@ -1,11 +1,17 @@
 {
 	"compilerOptions": {
 		"target": "ES2017"
+		, "module": "commonjs"
+		, "outDir": "build"
+		, "sourceMap": true
+		, "experimentalDecorators": true
+		, "emitDecoratorMetadata": true
 	},
 
 	"include": [
 		"**/*"
 	],
+
 	"exclude": [
 		"node_modules"
 	]

@@ -1,51 +1,46 @@
 import * as express from 'express';
 
 import * as types from './types';
-import database from './database';
+import { staticMemoryDatabase as database } from './memory-database';
 
-let router = express.Router();
+export const router = express.Router();
 
 
 // Check if connection works
 router.all('/ping', (req, res) => {
-	res.send({ ok: true });
-	res.end();
+	res.send_ok();
 });
 
 
 // Get general information about a chat
 router.get('/chat/:chatid', (req, res) => {
-	const chatid = parseInt(req.params.chatid);
+	try {
+		const chatid = parseInt(req.params.chatid);
 
-	// Check if chat exists
-	if (! database.chatExists(chatid)) {
-		res.send({
-			ok: false,
-			err: "Unknown chat",
-		});
+		// Check if chat exists
+		if (! database.chatExists(chatid)) {
+			res.send_err("Unknown chat");
+			return;
+		}
 
-		res.end();
-		return;
+		// Get chat
+		let chat = database.getChat(chatid);
+		let data = { };
+
+		// Get last message
+		// NOTE: The history is descending, so the first item is the latest message
+		let message = chat.history.find((hist) => hist.type === types.HistoryType.Message);
+
+		// Get last message (if any)
+		if (typeof message !== 'undefined') {
+			data['last_message'] = message;
+		}
+
+
+		res.send_ok(data);
 	}
-
-	// Get chat
-	let chat: types.Chat = database.getChat(chatid);
-	let data = { ok: true };
-
-	// Get all messages
-	let messages = chat.history.filter((hist) => hist.type === types.HistoryType.Message);
-
-	// Get last message (if any)
-	if (messages.length > 0) {
-		data['last_message'] = messages[messages.length - 1];
+	catch(err) {
+		console.error(err);
+		res.send_err(err);
 	}
-
-
-	res.send(data);
-	res.end();
 });
-
-
-export {
-	router
-}
