@@ -1,6 +1,3 @@
-import * as express from 'express';
-
-
 export default function(req, res, next) {
 	res.send_ok = function(data: object = {}) {
 		data['ok'] = true;

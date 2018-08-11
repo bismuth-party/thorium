@@ -11,7 +11,7 @@ class Bar extends Validate {
 
 class Baz extends Bar {
 	@validate
-	z: number;
+	z: string;
 }
 
 class Foo extends Validate {
@@ -32,9 +32,11 @@ class Foo extends Validate {
 }
 
 
-new Foo({
+const foo = new Foo({
 	string: JSON.parse('"100"'),
 	number: JSON.parse('100'),
 	boolean: JSON.parse('false'),
-	bar: new Baz(JSON.parse('{ "x": 10, "y": "hello", "z": 30 }')),
+	bar: new Baz(JSON.parse('{ "x": 10, "z": "Test OK" }')),
 });
+
+console.log((<Baz> foo.bar).z);

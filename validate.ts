@@ -21,7 +21,11 @@ export function validate(target: any, key: any) {
 }
 
 
-export function isValid(key: string, val: any, type: Function): boolean {
+export function isValid(key: string, val: any, type: any): boolean {
+	if (typeof type === 'undefined') {
+		throw new TypeError("Type can't be undefined");
+	}
+
 	let optional = false;
 
 	// A value is optional if the key is preceded with '?'
@@ -46,14 +50,17 @@ export class Validate {
 	private __keys__;
 
 	constructor(data: object) {
-		this.__keys__.forEach((key) => {
+		this.__keys__.forEach((_key) => {
+			// Trim optional ?
+			const key = _key[0] === '?' ? _key.substr(1) : _key;
+
 			const val = data[key];
 			let type = Reflect.getMetadata('design:type', this, key);
 
 			// Remove key from data to know which keys are left later
 			delete data[key];
 
-			if (! isValid(key, val, type)) {
+			if (! isValid(_key, val, type)) {
 				throw new TypeError(`Field '${key}' with type '${typeof val}' does not match required type '${type.name.toLowerCase()}'`);
 			}
 
@@ -74,15 +81,14 @@ export class Validate {
 	*  Check if all values of this object are valid
 	*/
 	isValid(): boolean {
-		if (Object.getOwnPropertyNames(this).length !== this.__keys__.length) {
-			return false;
-		}
+		for (let _key of this.__keys__) {
+			// Trim optional ?
+			const key = _key[0] === '?' ? _key.substr(1) : _key;
 
-		for (let key of this.__keys__) {
 			const val = this[key];
 			let type = Reflect.getMetadata('design:type', this, key);
 
-			if (! isValid(key, val, type)) {
+			if (! isValid(_key, val, type)) {
 				return false;
 			}
 		}

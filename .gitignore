@@ -1,2 +1,5 @@
 config.cson
 node_modules
+
+# Output of tsc command
+*.js

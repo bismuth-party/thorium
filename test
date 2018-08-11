@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tsc test.ts \
+	--experimentalDecorators --emitDecoratorMetadata --target ES2017 --module commonjs \
+	--outDir build  && node build/test.js
+exit $?
