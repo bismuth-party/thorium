@@ -3,6 +3,9 @@ import * as express from 'express';
 import * as types from './types';
 import { staticMemoryDatabase as database } from './memory-database';
 
+import './express-extension';
+
+
 export const router = express.Router();
 
 

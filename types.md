@@ -112,3 +112,47 @@ Example:
 `width: int`  
 `height: int`  
 `file_size: ?int`  
+
+
+
+# History
+```
+{
+	type: int		The number after the equal sign in the subheader
+	userid: int		The ID of the user who triggered the record
+	date: string	The ISO 8601 Extended Format string of the date and time at which the record was added
+	content			The content of the record (the part under the subheader)
+}
+```
+
+Example:
+```
+{
+	type: 4,
+	userid: 12345678,
+	date: "2018-08-13T14:12:10.037Z",
+	content: {
+		emoji: "💻",
+		set_name: "tech_stickerpack"
+	}
+}
+```
+
+## Message = 0
+`content: Message`	The sent message
+
+## MessageEdit = 1
+`content: Message`	The edited message
+
+## ChatUpdate_NewMember = 2
+`content: User`		The new user
+
+## ChatUpdate_LeftMember = 3
+
+## ChatUpdate_NewTitle = 4
+`content: string`	The new title
+
+## ChatUpdate_NewChatPhoto = 5
+`content: PhotoData`	The new photo
+
+## ChatUpdate_DeleteChatPhoto = 6

@@ -28,6 +28,7 @@ export class Message extends Validate {
 
 export enum HistoryType {
 	Message,
+	Message_Edit,
 
 	ChatUpdate_NewMember,
 	ChatUpdate_LeftMember,
@@ -42,6 +43,9 @@ export class History extends Validate {
 
 	@validate
 	userid: number;
+
+	@validate
+	date: Date;
 
 	@validate
 	content: any;

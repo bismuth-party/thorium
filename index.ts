@@ -8,7 +8,7 @@ import express_extension from './express-extension';
 
 
 // Make sure config file exists
-if (! fs.statSync('./config.cson').isFile() ) {
+if (! fs.existsSync('./config.cson')) {
 	console.error("Please copy the config.cson.example file to config.cson and add the bot token.");
 	process.exit(1);
 }

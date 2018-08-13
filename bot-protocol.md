@@ -15,6 +15,17 @@ Has to be called whenever a message gets sent
 }
 ```
 
+# POST /<BOT_TOKEN>/message_edit
+Has to be called whenever a message is edited
+
+```
+{
+	chatid: int		The ID of the chat where the message got edited
+	userid: int		The ID of the user that edited the message
+	message: Message	The edited message
+}
+```
+
 
 # POST /<BOT_TOKEN>/chat_update/new_member
 Has to be called whenever a new member joins the chat

@@ -3,6 +3,9 @@ import * as express from 'express';
 import * as types from './types';
 import { staticMemoryDatabase as database } from './memory-database';
 
+import './express-extension';
+
+
 export const router = express.Router();
 
 
@@ -27,6 +30,35 @@ router.post('/message', (req, res) => {
 		database.addHistory(body.chatid, new types.History({
 			type: types.HistoryType.Message,
 			userid: body.userid,
+			date: new Date(),
+			content: new types.Message(body.message),
+		}));
+	}
+	catch(err) {
+		console.error(err);
+		res.send_err(err.toString());
+		return;
+	}
+
+	res.send_ok();
+});
+
+
+// Gets called when a message is edited
+router.post('/message_edit', (req, res) => {
+	let body = req.body;
+	/*
+	chatid: int
+	userid: int
+	message: Message
+	*/
+
+
+	try {
+		database.addHistory(body.chatid, new types.History({
+			type: types.HistoryType.Message_Edit,
+			userid: body.userid,
+			date: new Date(),
 			content: new types.Message(body.message),
 		}));
 	}
@@ -53,6 +85,7 @@ router.post('/chat_update/new_member', (req, res) => {
 		database.addHistory(body.chatid, new types.History ({
 			type: types.HistoryType.ChatUpdate_NewMember,
 			userid: body.userid,
+			date: new Date(),
 			content: new types.User(body.user),
 		}));
 	}
@@ -80,6 +113,7 @@ router.post('/chat_update/left_member', (req, res) => {
 		database.addHistory(body.chatid, new types.History({
 			type: types.HistoryType.ChatUpdate_LeftMember,
 			userid: body.userid,
+			date: new Date(),
 		}));
 	}
 	catch(err) {
@@ -107,6 +141,7 @@ router.post('/chat_update/new_title', (req, res) => {
 		database.addHistory(body.chatid, new types.History({
 			type: types.HistoryType.ChatUpdate_NewTitle,
 			userid: body.userid,
+			date: new Date(),
 			content: body.title,
 		}));
 	}
@@ -135,6 +170,7 @@ router.post('/chat_update/new_chat_photo', (req, res) => {
 		database.addHistory(body.chatid, new types.History({
 			type: types.HistoryType.ChatUpdate_NewChatPhoto,
 			userid: body.userid,
+			date: new Date(),
 			content: new types.PhotoData(body.photo),
 		}));
 	}
@@ -150,7 +186,7 @@ router.post('/chat_update/new_chat_photo', (req, res) => {
 
 
 // Gets called when the chat photo is deleted
-router.post('/chat_update/new_chat_photo', (req, res) => {
+router.post('/chat_update/delete_chat_photo', (req, res) => {
 	let body = req.body;
 	/*
 	chatid: int
@@ -162,6 +198,7 @@ router.post('/chat_update/new_chat_photo', (req, res) => {
 		database.addHistory(body.chatid, new types.History({
 			type: types.HistoryType.ChatUpdate_DeleteChatPhoto,
 			userid: body.userid,
+			date: new Date(),
 		}));
 	}
 	catch(err) {

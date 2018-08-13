@@ -11,5 +11,15 @@ Get general information about a chat
 ```
 {
 	last_message: ?Message	The last message (if any)
+	last_title: ?string		The last title (if any known)
+}
+```
+
+
+# GET /api/chat/<chatID>/titles
+Get a list of all titles known
+```
+{
+	titles: [History]	A list of all historical records about titles
 }
 ```
