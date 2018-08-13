@@ -10,8 +10,9 @@ Check if the connection works
 Get general information about a chat
 ```
 {
-	last_message: ?Message	The last message (if any)
-	last_title: ?string		The last title (if any known)
+	last_message: ?History<Message>	The record of the last message (if any)
+	last_title: ?History<string>	The record of the last title (if any)
+	users: [User]					All users of this group
 }
 ```
 

@@ -1,7 +1,7 @@
 import * as express from 'express';
 
 import * as types from './types';
-import { staticMemoryDatabase as database } from './memory-database';
+import { Validate, validate, validate_optional } from './validate';
 
 import './express-extension';
 
@@ -18,29 +18,21 @@ router.all('/ping', (req, res) => {
 
 // Gets called when a new message is sent
 router.post('/message', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	message: Message
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.Message,
-			userid: body.userid,
-			date: new Date(),
-			content: new types.Message(body.message),
-		}));
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	message: types.Message;
 	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err.toString());
-		return;
-    }
-    
-    console.log(database['data']);
+
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.Message,
+		userid: body.userid,
+		date: new Date(),
+		content: body.message,
+	}));
 
 	res.send_ok();
 });
@@ -48,27 +40,21 @@ router.post('/message', (req, res) => {
 
 // Gets called when a message is edited
 router.post('/message_edit', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	message: Message
-	*/
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	message: types.Message;
+	}
+
+	let body = new Body(req.body);
 
 
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.Message_Edit,
-			userid: body.userid,
-			date: new Date(),
-			content: new types.Message(body.message),
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err.toString());
-		return;
-	}
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.Message_Edit,
+		userid: body.userid,
+		date: new Date(),
+		content: body.message,
+	}));
 
 	res.send_ok();
 });
@@ -76,27 +62,21 @@ router.post('/message_edit', (req, res) => {
 
 // Gets called when a new member joined
 router.post('/chat_update/new_member', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	user: User
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History ({
-			type: types.HistoryType.ChatUpdate_NewMember,
-			userid: body.userid,
-			date: new Date(),
-			content: new types.User(body.user),
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
-		return;
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	user: types.User;
 	}
 
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History ({
+		type: types.HistoryType.ChatUpdate_NewMember,
+		userid: body.userid,
+		date: new Date(),
+		content: body.user,
+	}));
 
 	res.send_ok();
 });
@@ -104,26 +84,21 @@ router.post('/chat_update/new_member', (req, res) => {
 
 // Gets called when a member left
 router.post('/chat_update/left_member', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.ChatUpdate_LeftMember,
-			userid: body.userid,
-			date: new Date(),
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
-		return;
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	user: types.User;
 	}
 
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.ChatUpdate_LeftMember,
+		userid: body.userid,
+		date: new Date(),
+		content: body.user,
+	}));
 
 	res.send_ok();
 });
@@ -131,28 +106,21 @@ router.post('/chat_update/left_member', (req, res) => {
 
 // Gets called when a new title is set
 router.post('/chat_update/new_title', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	title: string
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.ChatUpdate_NewTitle,
-			userid: body.userid,
-			date: new Date(),
-			content: body.title,
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
-		return;
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	title: string;
 	}
 
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.ChatUpdate_NewTitle,
+		userid: body.userid,
+		date: new Date(),
+		content: body.title,
+	}));
 
 	res.send_ok();
 });
@@ -160,28 +128,21 @@ router.post('/chat_update/new_title', (req, res) => {
 
 // Gets called when a new chat photo is set
 router.post('/chat_update/new_chat_photo', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	photo: PhotoData
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.ChatUpdate_NewChatPhoto,
-			userid: body.userid,
-			date: new Date(),
-			content: new types.PhotoData(body.photo),
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
-		return;
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
+		@validate	photo: types.PhotoData;
 	}
 
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.ChatUpdate_NewChatPhoto,
+		userid: body.userid,
+		date: new Date(),
+		content: body.photo,
+	}));
 
 	res.send_ok();
 });
@@ -189,26 +150,27 @@ router.post('/chat_update/new_chat_photo', (req, res) => {
 
 // Gets called when the chat photo is deleted
 router.post('/chat_update/delete_chat_photo', (req, res) => {
-	let body = req.body;
-	/*
-	chatid: int
-	userid: int
-	*/
-
-
-	try {
-		database.addHistory(body.chatid, new types.History({
-			type: types.HistoryType.ChatUpdate_DeleteChatPhoto,
-			userid: body.userid,
-			date: new Date(),
-		}));
-	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
-		return;
+	class Body extends Validate {
+		@validate	chatid: number;
+		@validate	userid: number;
 	}
 
+	let body = new Body(req.body);
+
+
+	req.database.addHistory(body.chatid, new types.History({
+		type: types.HistoryType.ChatUpdate_DeleteChatPhoto,
+		userid: body.userid,
+		date: new Date(),
+	}));
 
 	res.send_ok();
+});
+
+
+
+// Catch errors
+router.use((err, req, res, next) => {
+	console.error(err);
+	res.status(500).send_err("Internal server error");
 });

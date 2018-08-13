@@ -1,4 +1,4 @@
-import { Validate, validate, validate_optional } from './validate';
+import { Validate, validate, validate_optional, validate_array_of } from './validate';
 
 
 export enum MessageType {
@@ -21,8 +21,8 @@ export class Message extends Validate {
 	@validate
 	type: MessageType;
 
-	@validate
-	content: any;
+	@validate_optional
+	content?: any;
 }
 
 
@@ -30,7 +30,7 @@ export enum HistoryType {
 	Message,
 	Message_Edit,
 
-	ChatUpdate_NewMember,
+	ChatUpdate_NewMember = 10,
 	ChatUpdate_LeftMember,
 	ChatUpdate_NewTitle,
 	ChatUpdate_NewChatPhoto,
@@ -89,6 +89,6 @@ export class PhotoData extends Validate {
 
 
 export class Chat extends Validate {
-	@validate
+	@validate_array_of(History)
 	history: History[];
 }

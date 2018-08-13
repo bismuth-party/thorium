@@ -17,4 +17,4 @@ url: localhost:8467/api/chat/42
 ```
 
 ### Expected response:
-`{"last_message":{"type":0,"userid":12345,"date":"2018-08-13T16:13:32.073Z","content":{"type":0,"content":{"text":"Woah!"}}},"ok":true}`
+`{"last_message":{"type":0,"userid":12345,"date":"2018-08-13T16:13:32.073Z","content":{"type":0,"content":{"text":"Woah!"}}},"users":[],"ok":true}`

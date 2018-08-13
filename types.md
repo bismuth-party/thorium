@@ -115,44 +115,48 @@ Example:
 
 
 
-# History
+# History<T>
 ```
 {
 	type: int		The number after the equal sign in the subheader
 	userid: int		The ID of the user who triggered the record
-	date: string	The ISO 8601 Extended Format string of the date and time at which the record was added
-	content			The content of the record (the part under the subheader)
+	date: string	The ISO 8601 Extended Format string of the datetime at which the record was added
+	content: ?T		The content of the record
 }
 ```
 
 Example:
 ```
 {
-	type: 4,
+	type: 10,
 	userid: 12345678,
-	date: "2018-08-13T14:12:10.037Z",
+	date: "2018-08-13T20:15:55.215Z",
 	content: {
-		emoji: "💻",
-		set_name: "tech_stickerpack"
+		id: 87654321,
+		is_bot: false,
+		first_name: "Foo",
+		username: "foo_bar"
 	}
 }
 ```
 
 ## Message = 0
-`content: Message`	The sent message
+`T = Message`	The sent message
 
-## MessageEdit = 1
-`content: Message`	The edited message
+## Message_Edit = 1
+`T = Message`	The edited message
 
-## ChatUpdate_NewMember = 2
-`content: User`		The new user
+## 2-9 are reserved for possible later use
 
-## ChatUpdate_LeftMember = 3
+## ChatUpdate_NewMember = 10
+`T = User`		The new user
 
-## ChatUpdate_NewTitle = 4
-`content: string`	The new title
+## ChatUpdate_LeftMember = 11
 
-## ChatUpdate_NewChatPhoto = 5
-`content: PhotoData`	The new photo
+## ChatUpdate_NewTitle = 12
+`T = string`	The new title
 
-## ChatUpdate_DeleteChatPhoto = 6
+## ChatUpdate_NewChatPhoto = 13
+`T = PhotoData`	The new photo
+
+## ChatUpdate_DeleteChatPhoto = 14

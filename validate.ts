@@ -58,7 +58,11 @@ export function validate_optional_array_of(type: Function) {
 }
 
 
-function isValid(key: Key, val: any): boolean {
+/**
+ *  Returns `false` if invalid, `true` is valid, or an object if val has to be changed
+ *  in order to be valid (where the object is valid).
+ */
+function isValid(key: Key, val: any): boolean | any {
 	if (typeof key.type === 'undefined') {
 		return false;
 	}
@@ -96,12 +100,32 @@ function isValid(key: Key, val: any): boolean {
 	}
 
 
+	let val_changed = false;
+
+	// If the type is Validatable and the value is an object,
+	// call its constructor to validate the value
+	if (typeof val === 'object' && key.type.prototype instanceof Validate) {
+		val = new (<any>key.type)(val);
+		val_changed = true;
+	}
+
+	// Dates aren't supported by JSON, but should be supported by Javascript,
+	// so convert if necessary
+	if (typeof val === 'string' && key.type === Date) {
+		val = new Date(val);
+		val_changed = true;
+	}
+
 	const valid =
 		(val instanceof key.type) // classes
 		|| (typeof val === key.type.name.toLowerCase()) // number, string, boolean
 		|| (key.optional && typeof val === 'undefined') // optional
 		|| (key.type === Object && typeof val !== 'undefined'); // any
 
+
+	if (valid && val_changed) {
+		return val;
+	}
 
 	return valid;
 }
@@ -129,19 +153,19 @@ export class Validate {
 			// Remove key from data to know which keys are left later
 			// delete data[key];
 
-			// If the type is Validatable, call its constructor
-			// to validate the value
-			if (typeof val === 'object' && type.prototype instanceof Validate) {
-				val = new (<any> type)(val);
-			}
+			const valid = isValid(key, val);
 
-
-			if (! isValid(key, val)) {
+			if (valid === false) {
 				if (key.array) {
 					throw new TypeError(`One or more values in '${key.name}' does not match required type '${key.type.name.toLowerCase()}'`);
 				}
 
 				throw new TypeError(`Field '${key.name}' with type '${typeof val}' does not match required type '${type.name.toLowerCase()}'`);
+			}
+
+			// Value has changed, so reflect
+			if (valid !== true) {
+				val = valid;
 			}
 
 			// Add data to object

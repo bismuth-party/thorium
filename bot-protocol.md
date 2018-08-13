@@ -33,9 +33,13 @@ Has to be called whenever a new member joins the chat
 ```
 {
 	chatid: int		The ID of the chat
-	user: User		The new user
+	userid: int		*The ID of the user who added the new member
+	user: User		The new member
 }
 ```
+
+_* This can be the same as `user.id` if the member added themselves (i.e. through an invite link)_
+
 
 # POST /<BOT_TOKEN>/chat_update/left_member
 Has to be called whenever a member left the chat
@@ -43,9 +47,12 @@ Has to be called whenever a member left the chat
 ```
 {
 	chatid: int		The ID of the chat
-	userid: int		The ID of the user that left
+	userid: int		*The ID of the user who removed the new member
+	user: User		The user that left
 }
 ```
+
+_* This can be the same as `user.id` if the member removed themselves_
 
 
 # POST /<BOT_TOKEN>/chat_update/new_title

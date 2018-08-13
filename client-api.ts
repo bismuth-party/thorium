@@ -1,7 +1,6 @@
 import * as express from 'express';
 
 import * as types from './types';
-import { staticMemoryDatabase as database } from './memory-database';
 
 import './express-extension';
 
@@ -17,33 +16,76 @@ router.all('/ping', (req, res) => {
 
 // Get general information about a chat
 router.get('/chat/:chatid', (req, res) => {
-	try {
-		const chatid = parseInt(req.params.chatid);
+	const chatid = parseInt(req.params.chatid);
 
-		// Check if chat exists
-		if (! database.chatExists(chatid)) {
-			res.send_err("Unknown chat");
-			return;
-		}
-
-		// Get chat
-		let chat = database.getChat(chatid);
-		let data = { };
-
-		// Get last message
-		// NOTE: The history is descending, so the first item is the latest message
-		let message = chat.history.find((hist) => hist.type === types.HistoryType.Message);
-
-		// Get last message (if any)
-		if (typeof message !== 'undefined') {
-			data['last_message'] = message;
-		}
-
-
-		res.send_ok(data);
+	// Check if chat exists
+	if (! req.database.chatExists(chatid)) {
+		res.send_err("Unknown chat");
+		return;
 	}
-	catch(err) {
-		console.error(err);
-		res.send_err(err);
+
+	// Get chat
+	let chat = req.database.getChat(chatid);
+	let data = <any> { };
+
+	// Get last message
+	// NOTE: The history is descending, so the first item is the latest record
+	let message = chat.history
+		.find((hist) => hist.type === types.HistoryType.Message);
+
+	if (typeof message !== 'undefined') {
+		data.last_message = message;
 	}
+
+
+	// Get last title
+	let title = chat.history
+		.find((hist) => hist.type === types.HistoryType.ChatUpdate_NewTitle);
+
+	if (typeof title !== 'undefined') {
+		data.last_title = title.content;
+	}
+
+
+	// Get all users
+	let users = chat.history
+		.filter((hist) => hist.type === types.HistoryType.ChatUpdate_NewMember)
+		.map((hist) => hist.content);
+
+	data.users = users;
+
+
+	res.send_ok(data);
+});
+
+
+// Get a list of all known titles
+router.get('/chat/:chatid/titles', (req, res) => {
+	const chatid = parseInt(req.params.chatid);
+
+	// Check if chat exists
+	if (! req.database.chatExists(chatid)) {
+		res.send_err("Unknown chat");
+		return;
+	}
+
+	// Get chat
+	let chat = req.database.getChat(chatid);
+	let data = <any> { };
+
+	// Get all titles
+	let titles = chat.history
+		.filter((hist) => hist.type === types.HistoryType.ChatUpdate_NewTitle);
+
+	data.titles = titles;
+
+
+	res.send_ok(data);
+});
+
+
+// Catch errors
+router.use((err, req, res, next) => {
+	console.error(err);
+	res.status(500).send_err("Internal server error");
 });

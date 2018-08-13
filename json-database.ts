@@ -1,20 +1,45 @@
+import * as fs from 'fs';
+
 import * as types from './types';
 import { Database, CHAT_PREFIX } from './database';
 
 
 /**
- *  A simple database which only lives in memory
+ *  A simple database which stores data in a JSON file
  */
-export class MemoryDatabase extends Database {
+export class JSONDatabase extends Database {
 	private data: object;
+	private filename: string;
 
-	constructor() {
+	constructor(filename: string) {
 		super();
-		this.data = {};
+		this.filename = filename;
+		this.read();
+	}
+
+	private read(): void {
+		try {
+			// NOTE: All type information is lost
+			this.data = JSON.parse(fs.readFileSync(this.filename).toString());
+		}
+		catch(err) {
+			this.data = {};
+
+			// Ignore if file not found
+			if (err.code !== 'ENOENT') {
+				throw err;
+			}
+		}
+	}
+
+	private write(): void {
+		// NOTE: All type information gets lost
+		fs.writeFileSync(this.filename, JSON.stringify(this.data, null, '\t'));
 	}
 
 	private set(key: string, value): void {
 		this.data[key] = value;
+		this.write();
 	}
 
 	private get(key: string) {
@@ -23,9 +48,13 @@ export class MemoryDatabase extends Database {
 
 
 	getChat(chatid: number): types.Chat {
-		// A non-validated cast is fine here, since we asserted that the
-		// incoming data is correct.
-		return <types.Chat> this.get(CHAT_PREFIX + chatid);
+		let chat = this.get(CHAT_PREFIX + chatid);
+
+		if (typeof chat === 'undefined') {
+			return undefined;
+		}
+
+		return new types.Chat(chat);
 	}
 
 	setChat(chatid: number, chat: types.Chat): void {

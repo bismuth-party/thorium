@@ -1,8 +1,19 @@
+import { Database } from './database';
+import { JSONDatabase } from './json-database';
+
+
+const database = new JSONDatabase('./build/db.json');
+
+
 declare global {
 	namespace Express {
 		interface Response {
 			send_ok(_?:object): void;
 			send_err(_:string): void;
+		}
+
+		interface Request {
+			database: Database;
 		}
 	}
 }
@@ -21,6 +32,8 @@ export default function(req, res, next) {
 		});
 		res.end();
 	};
+
+	req.database = database;
 
 	next();
 }
