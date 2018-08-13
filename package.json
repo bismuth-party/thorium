@@ -4,20 +4,22 @@
   "description": "The backend of the Wismut bot",
   "main": "index.ts",
   "dependencies": {
-    "@types/body-parser": "^1.17.0",
-    "@types/compression": "0.0.36",
-    "@types/cson": "0.0.31",
-    "@types/express": "^4.16.0",
-    "@types/node": "^10.5.7",
-    "@types/reflect-metadata": "^0.1.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cson": "^5.1.0",
     "express": "^4.16.3",
     "reflect-metadata": "^0.1.12"
   },
-  "devDependencies": {},
+  "devDependencies": {
+      "@types/body-parser": "^1.17.0",
+      "@types/compression": "0.0.36",
+      "@types/cson": "0.0.31",
+      "@types/express": "^4.16.0",
+      "@types/node": "^10.5.7",
+      "@types/reflect-metadata": "^0.1.0"
+  },
   "scripts": {
+    "clean": "rm build/*.js*",
     "test": "./test",
     "run": "ts-node index.ts"
   },

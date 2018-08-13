@@ -1,3 +1,12 @@
+declare global {
+	namespace Express {
+		interface Response {
+			send_ok(_?:object): void;
+			send_err(_:string): void;
+		}
+	}
+}
+
 export default function(req, res, next) {
 	res.send_ok = function(data: object = {}) {
 		data['ok'] = true;
