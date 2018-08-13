@@ -38,7 +38,9 @@ router.post('/message', (req, res) => {
 		console.error(err);
 		res.send_err(err.toString());
 		return;
-	}
+    }
+    
+    console.log(database['data']);
 
 	res.send_ok();
 });
