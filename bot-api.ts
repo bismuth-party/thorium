@@ -168,6 +168,11 @@ router.post('/chat_update/delete_chat_photo', (req, res) => {
 });
 
 
+// Catch 404
+router.use((req, res, next) => {
+	res.status(404).send_err("Unknown endpoint");
+});
+
 
 // Catch errors
 router.use((err, req, res, next) => {

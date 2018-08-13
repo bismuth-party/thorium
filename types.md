@@ -115,24 +115,24 @@ Example:
 
 
 
-# History<T>
+# History<?T>
 ```
 {
 	type: int		The number after the equal sign in the subheader
 	userid: int		The ID of the user who triggered the record
 	date: string	The ISO 8601 Extended Format string of the datetime at which the record was added
-	content: ?T		The content of the record
+	content: T		The content of the record    (is undefined if T is undefined)
 }
 ```
 
-Example:
+Example: 11111 added 22222 to the chat
 ```
 {
 	type: 10,
-	userid: 12345678,
+	userid: 11111,
 	date: "2018-08-13T20:15:55.215Z",
 	content: {
-		id: 87654321,
+		id: 22222,
 		is_bot: false,
 		first_name: "Foo",
 		username: "foo_bar"
@@ -149,9 +149,10 @@ Example:
 ## 2-9 are reserved for possible later use
 
 ## ChatUpdate_NewMember = 10
-`T = User`		The new user
+`T = User`		The user that joined
 
 ## ChatUpdate_LeftMember = 11
+`T = User`		The user that left
 
 ## ChatUpdate_NewTitle = 12
 `T = string`	The new title
