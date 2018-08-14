@@ -95,8 +95,13 @@ export class MemoryDatabase extends Database {
 			return false;
 		}
 
+		let chat = this.getChat(chatid);
+		if (typeof chat === 'undefined') {
+			return false;
+		}
+
 		// Make sure the user is part of that chat
-		let users = this.getChat(chatid).getUsers();
+		let users = chat.getUsers();
 		for (let user of users) {
 			if (user.id === token.userid) {
 				return true;
