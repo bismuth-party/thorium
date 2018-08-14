@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>thorium - test</title>
+		<script>const ROOT = 'http://localhost:8467';</script>
+
+
+		<style>
+			* {
+				font-family: monospace;
+			}
+
+			body {
+				margin: 0;
+				padding-left: 5%;
+				padding-right: 5%;
+				padding-top: 2%;
+
+				font-size: 12pt;
+				line-height: 1.5em;
+
+				width: 90%;
+				height: 100%;
+			}
+
+			body:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+
+			.left, .right {
+				float: left;
+				width: 50%;
+			}
+
+			label {
+				width: 20%;
+				display: inline-block;
+			}
+			input:not([type]) {
+				width: 75%;
+			}
+
+			h3 {
+				padding: 0;
+				margin: 0;
+			}
+
+
+			h3 input[type="button"] {
+				border: 0;
+				margin: 0;
+				padding: 0;
+
+				padding-left: 10%;
+
+				background-color: #fff;
+				color: #009;
+
+				cursor: pointer;
+				font-size: 150%;
+				font-weight: bold;
+			}
+
+			h3 input[type="button"]:hover {
+				text-decoration: underline;
+			}
+
+			hr {
+				margin: 2em;
+			}
+		</style>
+
+		<script>
+			function $$(name) { return document.querySelector('input[name="'+name+'"]'); }
+			function $(name) { return $$(name).value; }
+
+			function send(method, url, data, cb) {
+				let xml = new XMLHttpRequest();
+
+				document.getElementById('output-h').innerHTML = url;
+
+				function onload(event) {
+					let data = JSON.parse(event.target.response);
+
+					document.getElementById('output').innerHTML = JSON.stringify(data, null, 2);
+
+					document.getElementById('output').className = '';
+					Rainbow.color();
+
+					cb && cb(data);
+				}
+				xml.addEventListener('load', onload);
+				xml.addEventListener('error', onload);
+
+				xml.open(method, ROOT + url);
+				xml.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+				xml.send(JSON.stringify(data));
+			}
+
+			function bot_ping() {
+				let token = $('bot-token');
+				send('GET', '/' + token + '/ping');
+			}
+
+			function bot_message() {
+				let token = $('bot-token');
+				let chatid = +$('bot-chatid');
+				let userid = +$('bot-userid');
+
+				send('POST', '/' + token + '/message', {
+					chatid, userid,
+					message: {
+						type: 0,
+						content: $('bot-message'),
+					},
+				});
+			}
+
+			function bot_newmember() {
+				let token = $('bot-token');
+				let chatid = +$('bot-chatid');
+				let userid = +$('bot-userid');
+
+				send('POST', '/' + token + '/chat_update/new_member', {
+					chatid, userid,
+					user: {
+						id: userid,
+						is_bot: false,
+						first_name: "",
+					},
+				});
+			}
+
+			function bot_gentoken() {
+				let token = $('bot-token');
+				let userid = +$('bot-userid');
+
+				send('GET', '/' + token + '/generate_token/' + userid, undefined, (clienttoken) => {
+					$$('client-token').value = clienttoken.token;
+				});
+			}
+
+			function client_ping() {
+				send('GET', '/api/ping');
+			}
+
+			function client(url) {
+				let token = $('client-token');
+				let chatid = $('client-chatid');
+
+				send('GET', '/api/' + token + '/chat/' + chatid + url)
+			}
+
+			function client_chat() {
+				client('');
+			}
+
+			function client_extended() {
+				client('/extended');
+			}
+		</script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js" integrity="sha256-rxZ0ft33A1KYWHxnp8pLN9Z6CMvDdBQLdRTHK57yyWI=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/generic.min.js" integrity="sha256-eWxVgM7v8Ya6mQnpFiK9XGY/g9wXMD/aceEV1CNdTN8=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/javascript.js" integrity="sha256-gQhDPg8qH8o0giSJYti3TkghRqObIhw9RUSboiSyGx0=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.min.css" integrity="sha256-QckIvzkQf+yseyRP7An3y2nVFLsPMrZlWrhLv1bGs2Q=" crossorigin="anonymous" />
+
+		<script>Rainbow.defer = true;</script>
+	</head>
+	<body>
+		<div class="left">
+			<div id="bot">
+				<h1>bot</h1>
+				<label>token</label> <input name="bot-token"><br>
+				<label>chatid</label> <input name="bot-chatid"><br>
+				<label>userid</label> <input name="bot-userid"><br>
+
+				<h3><input type="button" onclick="bot_ping()" value="ping"></h3>
+
+				<h3><input type="button" onclick="bot_message()" value="message"></h3>
+				<label>message</label> <input name="bot-message"><br>
+
+				<h3><input type="button" onclick="bot_newmember()" value="new_member"></h3>
+
+				<h3><input type="button" onclick="bot_gentoken()" value="generate_token"></h3>
+			</div>
+
+			<hr>
+
+			<div id="client">
+				<h1>client</h1>
+				<label>token</label> <input name="client-token"><br>
+				<label>chatid</label> <input name="client-chatid"><br>
+
+				<h3><input type="button" onclick="client_ping()" value="ping"></h3>
+
+				<h3><input type="button" onclick="client_chat()" value="chat"></h3>
+
+				<h3><input type="button" onclick="client_extended()" value="chat/extended"></h3>
+			</div>
+		</div>
+
+		<div class="right">
+			<h1 id="output-h">output</h1>
+			<pre id="output" data-language="javascript"></pre>
+		</div>
+	</body>
+</html>

@@ -54,6 +54,7 @@ Example:
 
 ## Photo = 5
 `caption: ?string`  
+`photos: PhotoData[]`  
 
 ## Sticker = 6
 `file_id: string`  
@@ -158,6 +159,6 @@ Example: 11111 added 22222 to the chat
 `T = string`	The new title
 
 ## ChatUpdate_NewChatPhoto = 13
-`T = PhotoData`	The new photo
+`T = PhotoData[]`	The new photos
 
 ## ChatUpdate_DeleteChatPhoto = 14

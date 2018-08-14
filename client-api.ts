@@ -14,8 +14,27 @@ router.all('/ping', (req, res) => {
 });
 
 
+const auth_chat_router = express.Router({
+	// Copy token and chatid from `router`
+	mergeParams: true,
+});
+
+router.use('/:token/chat/:chatid', auth_chat_router);
+auth_chat_router.use((req, res, next) => {
+	let chatid = parseInt(req.params.chatid);
+	let token = types.Token.fromString(req.params.token);
+
+	if (req.database.validateToken(chatid, token)) {
+		next();
+	}
+	else {
+		res.send_err("Invalid token");
+	}
+})
+
+
 // Get general information about a chat
-router.get('/chat/:chatid', (req, res) => {
+auth_chat_router.get('/', (req, res) => {
 	const chatid = parseInt(req.params.chatid);
 
 	// Check if chat exists
@@ -47,11 +66,43 @@ router.get('/chat/:chatid', (req, res) => {
 	}
 
 
-	// Get all users
-	let users = chat.history
-		.filter((hist) => hist.type === types.HistoryType.ChatUpdate_NewMember)
-		.map((hist) => hist.content);
+	res.send_ok(data);
+});
 
+
+// Get extended information about a chat
+auth_chat_router.get('/extended', (req, res) => {
+	const chatid = parseInt(req.params.chatid);
+
+	// Check if chat exists
+	if (! req.database.chatExists(chatid)) {
+		res.send_err("Unknown chat");
+		return;
+	}
+
+	// Get chat
+	let chat = req.database.getChat(chatid);
+	let data = <any> { };
+
+	// Get 20 most recent messages
+	// NOTE: The history is descending, so the first item is the latest record
+	let messages = chat.history
+		.filter((hist) => hist.type === types.HistoryType.Message)
+		.slice(0, 20);
+
+
+	data.recent_messages = messages;
+
+
+	// Get all titles
+	let titles = chat.history
+		.filter((hist) => hist.type === types.HistoryType.ChatUpdate_NewTitle);
+
+	data.all_titles = titles;;
+
+
+	// Get all users
+	let users = chat.getUsers();
 	data.users = users;
 
 
@@ -60,7 +111,7 @@ router.get('/chat/:chatid', (req, res) => {
 
 
 // Get a list of all known titles
-router.get('/chat/:chatid/titles', (req, res) => {
+auth_chat_router.get('/titles', (req, res) => {
 	const chatid = parseInt(req.params.chatid);
 
 	// Check if chat exists

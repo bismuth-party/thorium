@@ -5,8 +5,6 @@ All responses also include an `ok: bool` field to indicate if the request went a
 # ALL /<BOT_TOKEN>/ping
 Check if the connection works
 
-Always responds with `{ ok: true }`
-
 
 # POST /<BOT_TOKEN>/message
 Has to be called whenever a message gets sent
@@ -18,6 +16,7 @@ Has to be called whenever a message gets sent
 	message: Message	The message that was sent
 }
 ```
+
 
 # POST /<BOT_TOKEN>/message_edit
 Has to be called whenever a message is edited
@@ -90,5 +89,16 @@ Has to be called whenever the photo of the chat gets deleted
 {
 	chatid: int		The ID of the chat
 	userid: int		The ID of the user that deleted the photo
+}
+```
+
+
+
+# GET /<BOT_TOKEN>/generate_token/<USER_ID>
+(Re)generate a token for the user to log in with.
+
+```
+{
+	token: string
 }
 ```

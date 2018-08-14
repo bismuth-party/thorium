@@ -1,7 +1,8 @@
 import * as fs from 'fs';
 
 import * as types from './types';
-import { Database, CHAT_PREFIX } from './database';
+import * as utils from './utils';
+import { Database, CHAT_PREFIX, TOKEN_PREFIX, TOKEN_SIZE } from './database';
 
 
 /**
@@ -96,5 +97,47 @@ export class JSONDatabase extends Database {
 		this.editChat(chatid, (chat: types.Chat) => {
 			chat.history.unshift(history);
 		});
+	}
+
+
+	regenerateToken(userid: number): types.Token {
+		let token = utils.randomString(TOKEN_SIZE);
+
+		this.set(TOKEN_PREFIX + userid, token);
+		return new types.Token({
+			userid,
+			token,
+		});
+	}
+
+	verifyToken(userid: number, token: types.Token): boolean {
+		if (userid !== token.userid) {
+			return false;
+		}
+
+		let dbToken = this.get(TOKEN_PREFIX + userid);
+		return token.token === dbToken;
+	}
+
+	validateToken(chatid: number, token: types.Token): boolean {
+		// Make sure the token is valid
+		if (! this.verifyToken(token.userid, token)) {
+			return false;
+		}
+
+		let chat = this.getChat(chatid);
+		if (typeof chat === 'undefined') {
+			return false;
+		}
+
+		// Make sure the user is part of that chat
+		let users = chat.getUsers();
+		for (let user of users) {
+			if (user.id === token.userid) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

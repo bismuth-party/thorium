@@ -1,6 +1,6 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { plural } from "./utils";
+import { plural } from './utils';
 
 
 class Key {
@@ -8,6 +8,7 @@ class Key {
 	type?: Function;
 	optional: boolean = false;
 	array: boolean = false;
+	validator?: (_:any) => boolean;
 }
 
 function addkey(target: any, key: Key): void {
@@ -57,12 +58,27 @@ export function validate_optional_array_of(type: Function) {
 	}
 }
 
+export function validate_fn(fn: Function) {
+	return function(target: any, key: string) {
+		addkey(target, <Key> {
+			name: key,
+			optional: false,
+			array: false,
+			validator: fn,
+		})
+	}
+}
+
 
 /**
  *  Returns `false` if invalid, `true` is valid, or an object if val has to be changed
  *  in order to be valid (where the object is valid).
  */
 function isValid(key: Key, val: any): boolean | any {
+	if (typeof key.validator === 'function') {
+		return key.validator(val);
+	}
+
 	if (typeof key.type === 'undefined') {
 		return false;
 	}
@@ -158,6 +174,10 @@ export class Validate {
 			if (valid === false) {
 				if (key.array) {
 					throw new TypeError(`One or more values in '${key.name}' does not match required type '${key.type.name.toLowerCase()}'`);
+				}
+
+				if (typeof key.validator === 'function') {
+					throw new TypeError(`Field '${key.name}' with type '${typeof val}' did not match custom validator`);
 				}
 
 				throw new TypeError(`Field '${key.name}' with type '${typeof val}' does not match required type '${type.name.toLowerCase()}'`);

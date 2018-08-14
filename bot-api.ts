@@ -168,6 +168,17 @@ router.post('/chat_update/delete_chat_photo', (req, res) => {
 });
 
 
+// Generate a token for the user to authenticate with
+router.get('/generate_token/:user_id', (req, res) => {
+	let user_id = parseInt(req.params.user_id);
+	let token = req.database.regenerateToken(user_id);
+
+	res.send_ok({
+		token: token.toString(),
+	});
+});
+
+
 // Catch 404
 router.use((req, res, next) => {
 	res.status(404).send_err("Unknown endpoint");

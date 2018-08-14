@@ -1,8 +1,10 @@
 import * as express from 'express';
 import * as fs from 'fs';
+import * as path from 'path';
 import * as cson from 'cson';
 import * as body_parser from 'body-parser';
 import * as compression from 'compression';
+import * as moment from 'moment-timezone';
 
 import express_extension from './express-extension';
 
@@ -44,12 +46,44 @@ app.use(body_parser.urlencoded({
 // Add send_ok and send_err functions
 app.use(express_extension);
 
+// CORS *
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+	if (req.method === 'OPTIONS') {
+		res.sendStatus(200).end();
+	}
+	else {
+		next();
+	}
+});
+
+
+// Add logging
+app.use((req, res, next) => {
+	let date = moment().format('YYYYMMDDHHmmss');
+	let ip = req.headers['X-Real-IP'] || req.headers['X-Forwarded-For'] || req.ip;
+	let body = Object.getOwnPropertyNames(req.body).length ? JSON.stringify(req.body) : "";
+
+	console.log(date + ` ${ip} ${req.method} ${req.path} ${body}`);
+
+	next();
+});
+
 
 // Set up routes
 app.get('/', (req, res) => {
 	res.send('Hello, World!');
 	res.end();
 });
+
+
+app.get('/admin', (req, res) => {
+	res.sendFile(path.resolve('./admin.html'));
+});
+
 
 
 // Add bot API router
