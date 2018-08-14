@@ -4,6 +4,7 @@ import {
 	validate_optional,
 	validate_array_of,
 	validate_optional_array_of,
+	validate_fn,
 	// because why allow `*` ?
 } from './validate';
 
@@ -33,12 +34,16 @@ class Foo extends Validate {
 
 	@validate_optional_array_of(Boolean)
 	booleans?: boolean[];
+
+	@validate_fn((x) => x > 100)
+	high: number;
 }
 
 
 const foo = new Foo({
 	bar: new Baz(JSON.parse('{ "x": 10, "z": "Test OK" }')),
 	numbers: JSON.parse('[ 100, 200, 300 ]'),
+	high: 123,
 });
 
 console.log((<Baz> foo.bar).z);

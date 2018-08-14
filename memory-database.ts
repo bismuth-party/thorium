@@ -7,26 +7,30 @@ import { Database, CHAT_PREFIX, TOKEN_PREFIX, TOKEN_SIZE } from './database';
  *  A simple database which only lives in memory
  */
 export class MemoryDatabase extends Database {
-	private data: object;
+	protected data: object;
 
 	constructor() {
 		super();
 		this.data = {};
 	}
 
-	private set(key: string, value): void {
+	protected set(key: string, value): void {
 		this.data[key] = value;
 	}
 
-	private get(key: string) {
+	protected get(key: string) {
 		return this.data[key];
 	}
 
 
 	getChat(chatid: number): types.Chat {
-		// A non-validated cast is fine here, since we asserted that the
-		// incoming data is correct.
-		return <types.Chat> this.get(CHAT_PREFIX + chatid);
+		let chat = this.get(CHAT_PREFIX + chatid);
+
+		if (typeof chat === 'undefined') {
+			return undefined;
+		}
+
+		return new types.Chat(chat);
 	}
 
 	setChat(chatid: number, chat: types.Chat): void {
