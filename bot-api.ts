@@ -27,6 +27,8 @@ router.post('/message', (req, res) => {
 	let body = new Body(req.body);
 
 
+	req.database.addUserID(body.chatid, body.userid);
+
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.Message,
 		userid: body.userid,
@@ -70,8 +72,9 @@ router.post('/chat_update/new_member', (req, res) => {
 
 	let body = new Body(req.body);
 
+	req.database.addUserID(body.chatid, body.user.id);
 
-	req.database.addHistory(body.chatid, new types.History ({
+	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_NewMember,
 		userid: body.userid,
 		date: new Date(),
@@ -92,6 +95,7 @@ router.post('/chat_update/left_member', (req, res) => {
 
 	let body = new Body(req.body);
 
+	req.database.removeUserID(body.chatid, body.user.id);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_LeftMember,

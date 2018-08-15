@@ -111,7 +111,8 @@
 				let userid = +$('bot-userid');
 
 				send('POST', '/' + token + '/message', {
-					chatid, userid,
+					chatid,
+					userid,
 					message: {
 						type: 0,
 						content: $('bot-message'),
@@ -125,7 +126,24 @@
 				let userid = +$('bot-userid');
 
 				send('POST', '/' + token + '/chat_update/new_member', {
-					chatid, userid,
+					chatid,
+					userid,
+					user: {
+						id: userid,
+						is_bot: false,
+						first_name: "",
+					},
+				});
+			}
+
+			function bot_leftmember() {
+				let token = $('bot-token');
+				let chatid = +$('bot-chatid');
+				let userid = +$('bot-userid');
+
+				send('POST', '/' + token + '/chat_update/left_member', {
+					chatid,
+					userid,
 					user: {
 						id: userid,
 						is_bot: false,
@@ -184,6 +202,8 @@
 				<label>message</label> <input name="bot-message"><br>
 
 				<h3><input type="button" onclick="bot_newmember()" value="new_member"></h3>
+
+				<h3><input type="button" onclick="bot_leftmember()" value="left_member"></h3>
 
 				<h3><input type="button" onclick="bot_gentoken()" value="generate_token"></h3>
 			</div>
