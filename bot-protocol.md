@@ -11,8 +11,8 @@ Has to be called whenever a message gets sent
 
 ```
 {
-	chatid: int		The ID of the chat where the message got sent
-	userid: int		The ID of the user that sent the message
+	chatid: int			The ID of the chat where the message got sent
+	user: User			The user that sent the message
 	message: Message	The message that was sent
 }
 ```
@@ -23,8 +23,8 @@ Has to be called whenever a message is edited
 
 ```
 {
-	chatid: int		The ID of the chat where the message got edited
-	userid: int		The ID of the user that edited the message
+	chatid: int			The ID of the chat where the message got edited
+	user: User			The user that edited the message
 	message: Message	The edited message
 }
 ```
@@ -36,12 +36,12 @@ Has to be called whenever a new member joins the chat
 ```
 {
 	chatid: int		The ID of the chat
-	userid: int		*The ID of the user who added the new member
-	user: User		The new member
+	user: User		*The user who added the new member
+	newuser: User	The new member
 }
 ```
 
-_* This can be the same as `user.id` if the member added themselves (i.e. through an invite link)_
+_* This can be the same as `newuser.id` if the member added themselves (i.e. through an invite link)_
 
 
 # POST /<BOT_TOKEN>/chat_update/left_member
@@ -50,12 +50,12 @@ Has to be called whenever a member left the chat
 ```
 {
 	chatid: int		The ID of the chat
-	userid: int		*The ID of the user who removed the new member
-	user: User		The user that left
+	user: User		*The user who removed the left member
+	leftuser: User	The user that left
 }
 ```
 
-_* This can be the same as `user.id` if the member removed themselves_
+_* This can be the same as `leftuser.id` if the member removed themselves_
 
 
 # POST /<BOT_TOKEN>/chat_update/new_title
@@ -64,7 +64,7 @@ Has to be called whenever the chat gets a new title
 ```
 {
 	chatid: int		The ID of the chat
-	userid: int		The ID of the user that changed the title
+	user: User		The user that changed the title
 	title: string	The new title of the chat
 }
 ```
@@ -76,7 +76,7 @@ Has to be called whenever the chat gets a new photo
 ```
 {
 	chatid: int			The ID of the chat
-	userid: int			The ID of the user that changed the photo
+	user: User			The user that changed the photo
 	photo: PhotoData	The new chat photo
 }
 ```
@@ -88,7 +88,7 @@ Has to be called whenever the photo of the chat gets deleted
 ```
 {
 	chatid: int		The ID of the chat
-	userid: int		The ID of the user that deleted the photo
+	user: User		The user that deleted the photo
 }
 ```
 

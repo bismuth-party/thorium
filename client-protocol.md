@@ -23,7 +23,7 @@ Get extended information about a chat
 {
 	recent_messages: History<Message>[]		The last 20 messages
 	all_titles: History<string>[]			All titles this chat ever had
-	userids: number[]						The IDs of all users of this chat
+	users: User[]							A list of all users of this chat
 }
 ```
 

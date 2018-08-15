@@ -14,8 +14,9 @@ export abstract class Database {
 	abstract chatExists(chatid: number): boolean;
 	abstract editChat(chatid: number, edit: (_:types.Chat) => void): void;
 	abstract addHistory(chatid: number, history: types.History): void;
-	abstract addUserID(chatid: number, userid: number): void;
-	abstract removeUserID(chatid: number, userid: number): void;
+
+	abstract addUser(chatid: number, user: types.User): void;
+	abstract removeUser(chatid: number, user: types.User): void;
 
 	abstract regenerateToken(userid: number): types.Token;
 

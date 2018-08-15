@@ -100,6 +100,14 @@
 				xml.send(JSON.stringify(data));
 			}
 
+			function user(userid) {
+				return {
+					id: userid,
+					is_bot: false,
+					first_name: "first_name",
+				};
+			}
+
 			function bot_ping() {
 				let token = $('bot-token');
 				send('GET', '/' + token + '/ping');
@@ -112,7 +120,7 @@
 
 				send('POST', '/' + token + '/message', {
 					chatid,
-					userid,
+					user: user(userid),
 					message: {
 						type: 0,
 						content: $('bot-message'),
@@ -127,12 +135,8 @@
 
 				send('POST', '/' + token + '/chat_update/new_member', {
 					chatid,
-					userid,
-					user: {
-						id: userid,
-						is_bot: false,
-						first_name: "",
-					},
+					user: user(userid),
+					newuser: user(userid),
 				});
 			}
 
@@ -143,12 +147,8 @@
 
 				send('POST', '/' + token + '/chat_update/left_member', {
 					chatid,
-					userid,
-					user: {
-						id: userid,
-						is_bot: false,
-						first_name: "",
-					},
+					user: user(userid),
+					leftuser: user(userid),
 				});
 			}
 

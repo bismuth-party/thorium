@@ -101,22 +101,16 @@ export class Chat extends Validate {
 	@validate_array_of(History)
 	history: History[];
 
-	@validate_array_of(Number)
-	userids: number[];
+	@validate
+	users: object;
 
 
-	addUserID(userid: number): void {
-		if (this.userids.indexOf(userid) === -1) {
-			this.userids.push(userid);
-		}
+	addUser(user: User): void {
+		this.users[user.id] = user;
 	}
 
-	removeUserID(userid: number): void {
-		let ix = this.userids.indexOf(userid);
-
-		if (ix !== -1) {
-			this.userids.splice(ix, 1);
-		}
+	removeUser(user: User): void {
+		delete this.users[user.id];
 	}
 }
 

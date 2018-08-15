@@ -54,7 +54,7 @@ export class MemoryDatabase extends Database {
 		if (typeof chat === 'undefined') {
 			chat = new types.Chat({
 				history: [],
-				userids: [],
+				users: {},
 			});
 		}
 
@@ -75,15 +75,15 @@ export class MemoryDatabase extends Database {
 		});
 	}
 
-	addUserID(chatid: number, userid: number): void {
+	addUser(chatid: number, user: types.User): void {
 		this.editChat(chatid, (chat: types.Chat) => {
-			chat.addUserID(userid);
+			chat.addUser(user);
 		});
 	}
 
-	removeUserID(chatid: number, userid: number): void {
+	removeUser(chatid: number, user: types.User): void {
 		this.editChat(chatid, (chat: types.Chat) => {
-			chat.removeUserID(userid);
+			chat.removeUser(user);
 		});
 	}
 
@@ -119,8 +119,8 @@ export class MemoryDatabase extends Database {
 		}
 
 		// Make sure the user is part of that chat
-		for (let userid of chat.userids) {
-			if (userid === token.userid) {
+		for (let user of Object.values(chat.users)) {
+			if (user.id === token.userid) {
 				return true;
 			}
 		}

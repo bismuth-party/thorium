@@ -20,18 +20,18 @@ router.all('/ping', (req, res) => {
 router.post('/message', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
+		@validate	user: types.User;
 		@validate	message: types.Message;
 	}
 
 	let body = new Body(req.body);
 
 
-	req.database.addUserID(body.chatid, body.userid);
+	req.database.addUser(body.chatid, body.user);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.Message,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.message,
 	}));
@@ -44,16 +44,17 @@ router.post('/message', (req, res) => {
 router.post('/message_edit', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
+		@validate	user: types.User;
 		@validate	message: types.Message;
 	}
 
 	let body = new Body(req.body);
 
+	req.database.addUser(body.chatid, body.user);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.Message_Edit,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.message,
 	}));
@@ -66,17 +67,18 @@ router.post('/message_edit', (req, res) => {
 router.post('/chat_update/new_member', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
 		@validate	user: types.User;
+		@validate	newuser: types.User;
 	}
 
 	let body = new Body(req.body);
 
-	req.database.addUserID(body.chatid, body.user.id);
+	req.database.addUser(body.chatid, body.user);
+	req.database.addUser(body.chatid, body.newuser);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_NewMember,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.user,
 	}));
@@ -89,17 +91,17 @@ router.post('/chat_update/new_member', (req, res) => {
 router.post('/chat_update/left_member', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
 		@validate	user: types.User;
+		@validate	leftuser: types.User;
 	}
 
 	let body = new Body(req.body);
 
-	req.database.removeUserID(body.chatid, body.user.id);
+	req.database.removeUser(body.chatid, body.user);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_LeftMember,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.user,
 	}));
@@ -112,16 +114,17 @@ router.post('/chat_update/left_member', (req, res) => {
 router.post('/chat_update/new_title', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
+		@validate	user: types.User;
 		@validate	title: string;
 	}
 
 	let body = new Body(req.body);
 
+	req.database.addUser(body.chatid, body.user);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_NewTitle,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.title,
 	}));
@@ -134,16 +137,17 @@ router.post('/chat_update/new_title', (req, res) => {
 router.post('/chat_update/new_chat_photo', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
+		@validate	user: types.User;
 		@validate	photo: types.PhotoData;
 	}
 
 	let body = new Body(req.body);
 
+	req.database.addUser(body.chatid, body.user);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_NewChatPhoto,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 		content: body.photo,
 	}));
@@ -156,15 +160,17 @@ router.post('/chat_update/new_chat_photo', (req, res) => {
 router.post('/chat_update/delete_chat_photo', (req, res) => {
 	class Body extends Validate {
 		@validate	chatid: number;
-		@validate	userid: number;
+		@validate	user: types.User;
 	}
 
 	let body = new Body(req.body);
 
+	req.database.addUser(body.chatid, body.user);
+
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_DeleteChatPhoto,
-		userid: body.userid,
+		userid: body.user.id,
 		date: new Date(),
 	}));
 

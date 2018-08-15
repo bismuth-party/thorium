@@ -101,9 +101,8 @@ auth_chat_router.get('/extended', (req, res) => {
 	data.all_titles = titles;;
 
 
-	// Get all userids
-	let userids = chat.userids;
-	data.userids = userids;
+	// Get all users
+	data.users = Object.values(chat.users);
 
 
 	res.send_ok(data);
