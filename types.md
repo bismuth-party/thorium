@@ -14,6 +14,7 @@ Example:
 {
 	type: 6,
 	content: {
+		file_id: "STICKER",
 		emoji: "💻",
 		set_name: "tech_stickerpack"
 	}
@@ -41,7 +42,7 @@ Example:
 `file_size: ?int`  
 
 ## Animation = 3
-`caption: ?string`  												AVAILABLE ???  
+`caption: ?string`  										AVAILABLE ???  
 `file_id: string`  
 `duration: int`  
 `file_name: ?string`  
@@ -54,7 +55,7 @@ Example:
 
 ## Photo = 5
 `caption: ?string`  
-`photos: PhotoData[]`  
+`photo: PhotoData`		Only send the PhotoData with the highest resolution  
 
 ## Sticker = 6
 `file_id: string`  

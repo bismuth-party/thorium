@@ -3,12 +3,15 @@ import 'reflect-metadata';
 import { plural } from './utils';
 
 
+type ValidatorFn = (value: any, target: any) => boolean;
+
 class Key {
+	target?: object;
 	name: string;
 	type?: Function;
 	optional: boolean = false;
 	array: boolean = false;
-	validator?: (_:any) => boolean;
+	validator?: ValidatorFn;
 }
 
 function addkey(target: any, key: Key): void {
@@ -58,11 +61,22 @@ export function validate_optional_array_of(type: Function) {
 	}
 }
 
-export function validate_fn(fn: Function) {
+export function validate_fn(fn: ValidatorFn) {
 	return function(target: any, key: string) {
 		addkey(target, <Key> {
 			name: key,
 			optional: false,
+			array: false,
+			validator: fn,
+		})
+	}
+}
+
+export function validate_optional_fn(fn: ValidatorFn) {
+	return function(target: any, key: string) {
+		addkey(target, <Key> {
+			name: key,
+			optional: true,
 			array: false,
 			validator: fn,
 		})
@@ -75,8 +89,12 @@ export function validate_fn(fn: Function) {
  *  in order to be valid (where the object is valid).
  */
 function isValid(key: Key, val: any): boolean | any {
+	if (key.optional && typeof val === 'undefined') {
+		return true;
+	}
+
 	if (typeof key.validator === 'function') {
-		return key.validator(val);
+		return key.validator(val, key.target);
 	}
 
 	if (typeof key.type === 'undefined') {
@@ -90,10 +108,6 @@ function isValid(key: Key, val: any): boolean | any {
 
 	// Arrays need to be treated specially
 	if (key.array) {
-		if (key.optional && typeof val === 'undefined') {
-			return true;
-		}
-
 		if (! Array.isArray(val)) {
 			return false;
 		}
@@ -135,7 +149,6 @@ function isValid(key: Key, val: any): boolean | any {
 	const valid =
 		(val instanceof key.type) // classes
 		|| (typeof val === key.type.name.toLowerCase()) // number, string, boolean
-		|| (key.optional && typeof val === 'undefined') // optional
 		|| (key.type === Object && typeof val !== 'undefined'); // any
 
 
@@ -165,6 +178,8 @@ export class Validate {
 			let val = data[key.name];
 			let type = Reflect.getMetadata('design:type', this, key.name);
 			key.type = key.type || type;
+
+			key.target = data;
 
 			// Remove key from data to know which keys are left later
 			// delete data[key];

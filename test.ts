@@ -9,6 +9,9 @@ import {
 } from './validate';
 
 
+import * as types from './types';
+
+
 class Bar extends Validate {
 	@validate
 	x: number;
@@ -47,3 +50,14 @@ const foo = new Foo({
 });
 
 console.log((<Baz> foo.bar).z);
+
+
+
+new types.Message({
+	type: 6,
+	content: {
+		file_id: "STICKER",
+		emoji: "💻",
+		set_name: "tech_stickerpack",
+	},
+});
