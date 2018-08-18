@@ -194,7 +194,8 @@ export class Validate {
 				if (typeof key.validator === 'function') {
 					throw new TypeError(`Field '${key.name}' with type '${typeof val}' did not match custom validator`);
 				}
-
+				
+				console.error(val, typeof val);
 				throw new TypeError(`Field '${key.name}' with type '${typeof val}' does not match required type '${type.name.toLowerCase()}'`);
 			}
 
