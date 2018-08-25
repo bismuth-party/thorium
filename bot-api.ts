@@ -80,7 +80,7 @@ router.post('/chat_update/new_member', (req, res) => {
 		type: types.HistoryType.ChatUpdate_NewMember,
 		userid: body.user.id,
 		date: new Date(),
-		content: body.user,
+		content: body.newuser,
 	}));
 
 	res.send_ok();
@@ -103,7 +103,7 @@ router.post('/chat_update/left_member', (req, res) => {
 		type: types.HistoryType.ChatUpdate_LeftMember,
 		userid: body.user.id,
 		date: new Date(),
-		content: body.user,
+		content: body.leftuser,
 	}));
 
 	res.send_ok();
