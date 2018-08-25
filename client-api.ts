@@ -30,7 +30,7 @@ auth_chat_router.use((req, res, next) => {
 	else {
 		res.send_err("Invalid token");
 	}
-})
+});
 
 
 // Get general information about a chat
@@ -161,6 +161,41 @@ auth_chat_router.get('/titles', (req, res) => {
 
 	res.send_ok(data);
 });
+
+
+const auth_user_router = express.Router({
+	// Copy token and chatid from `router`
+	mergeParams: true,
+});
+
+router.use('/:token/user', auth_user_router);
+auth_user_router.use((req, res, next) => {
+	let token = types.Token.fromString(req.params.token);
+
+	if (req.database.verifyToken(token.userid, token)) {
+		next();
+	}
+	else {
+		res.send_err("Invalid token");
+	}
+});
+
+
+// Get general information about the current user
+auth_user_router.get('/', (req, res) => {
+	let token = new types.Token(req.params.token);
+	let userid = token.userid;
+
+	let data = <any> { };
+
+	// TODO: Get chats
+	let chats = [];
+	data.chats = chats;
+
+
+	res.send_ok(data);
+});
+
 
 
 // Catch 404
