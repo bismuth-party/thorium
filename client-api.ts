@@ -105,6 +105,35 @@ auth_chat_router.get('/extended', (req, res) => {
 	data.users = Object.values(chat.users);
 
 
+	let stats = (function(): types.ChatStatistics {
+		let messages_per_user = {};
+		let messages_per_hour = {};
+		let messages_per_weekday = {};
+
+
+		function inc(obj: object, key: any): void {
+			obj[key] = (obj[key] || 0) + 1;
+		}
+
+		chat.history.forEach((hist) => {
+			hist.date = new Date(hist.date);
+
+			inc(messages_per_user, hist.userid);
+			inc(messages_per_hour, hist.date.getHours());
+			inc(messages_per_weekday, hist.date.getDay());
+		});
+
+
+		return new types.ChatStatistics({
+			messages_per_user,
+			messages_per_hour,
+			messages_per_weekday,
+		});
+	})();
+
+	data.stats = stats;
+
+
 	res.send_ok(data);
 });
 

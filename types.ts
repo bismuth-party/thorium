@@ -206,6 +206,18 @@ export class Token extends Validate {
 }
 
 
+export class ChatStatistics extends Validate {
+	@validate
+	messages_per_user: object;
+
+	@validate
+	messages_per_hour: object;
+
+	@validate
+	messages_per_weekday: object;
+}
+
+
 
 
 export class Message_Text extends Validate {

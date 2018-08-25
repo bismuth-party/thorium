@@ -1,1 +1,2 @@
 * Validate enums
+* Validate maps

@@ -163,3 +163,11 @@ Example: 11111 added 22222 to the chat
 `T = PhotoData[]`	The new photos
 
 ## ChatUpdate_DeleteChatPhoto = 14
+
+
+# ChatStatistics
+`messages_per_user:  Map<int, int>`  The first int is the userid, the second int is the total amount of messages sent  
+`messages_per_hour:  Map<int, int>`  The first int is the start of the hour (eg. 18), the second int is the total amount of messages  
+`messages_per_weekday:   Map<int, int>`  The first int is the day of the week*, the second int is the total amount of messages  
+
+_* monday=0, tuesday=1, etc._
