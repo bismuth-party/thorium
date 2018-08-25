@@ -97,7 +97,7 @@ router.post('/chat_update/left_member', (req, res) => {
 
 	let body = new Body(req.body);
 
-	req.database.removeUser(body.chatid, body.user);
+	req.database.removeUser(body.chatid, body.leftuser);
 
 	req.database.addHistory(body.chatid, new types.History({
 		type: types.HistoryType.ChatUpdate_LeftMember,
