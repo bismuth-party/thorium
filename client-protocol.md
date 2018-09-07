@@ -7,7 +7,7 @@ See [bot-protocol.md] for the way to get the TOKEN.
 Check if the connection works
 
 
-# GET /api/:TOKEN>/chat/:chatID
+# GET /api/:TOKEN/chat/:chatID
 Get general information about a chat
 ```
 {
