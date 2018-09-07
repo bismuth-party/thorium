@@ -1,6 +1,6 @@
 All responses also include an `ok: bool` field to indicate if the request went alright. If it is `false`, then an `err: string` field is sent to indicate what went wrong.
 
-See [bot-protocol.md] for the way to get the TOKEN.
+See [bot-protocol.md](bot-protocol.md) for the way to get the TOKEN.
 
 
 # ALL /api/ping
