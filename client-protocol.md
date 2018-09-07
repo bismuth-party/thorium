@@ -7,7 +7,7 @@ See [bot-protocol.md] for the way to get the TOKEN.
 Check if the connection works
 
 
-# GET /api/<TOKEN>/chat/<chatID>
+# GET /api/:TOKEN>/chat/:chatID
 Get general information about a chat
 ```
 {
@@ -17,7 +17,7 @@ Get general information about a chat
 ```
 
 
-# GET /api/<TOKEN>/chat/<chatID>/extended
+# GET /api/:TOKEN/chat/:CHAT_ID/extended
 Get extended information about a chat
 ```
 {
@@ -29,7 +29,7 @@ Get extended information about a chat
 ```
 
 
-# GET /api/<TOKEN>/chat/<chatID>/titles
+# GET /api/:TOKEN/chat/:CHAT_ID/titles
 Get a list of all titles known
 ```
 {
@@ -38,7 +38,7 @@ Get a list of all titles known
 ```
 
 
-# GET /api/<TOKEN>/user
+# GET /api/:TOKEN/user
 Get general information about the current user
 ```
 {
