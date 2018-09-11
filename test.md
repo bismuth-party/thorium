@@ -42,4 +42,4 @@ url: /api/1111+5be795c9/chat/42
 ```
 
 ### Expected response:
-{"last_message":{"type":0,"userid":1111,"date":"2018-08-14T15:01:17.347Z","content":{"type":0,"content":"Woah"}},"ok":true}
+`{"last_message":{"type":0,"userid":1111,"date":"2018-08-14T15:01:17.347Z","content":{"type":0,"content":"Woah"}},"ok":true}`

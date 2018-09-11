@@ -2,11 +2,11 @@ All responses also include an `ok: bool` field to indicate if the request went a
 
 
 
-# ALL /<BOT_TOKEN>/ping
+# ALL /:BOT_TOKEN/ping
 Check if the connection works
 
 
-# POST /<BOT_TOKEN>/message
+# POST /:BOT_TOKEN/message
 Has to be called whenever a message gets sent
 
 ```
@@ -18,7 +18,7 @@ Has to be called whenever a message gets sent
 ```
 
 
-# POST /<BOT_TOKEN>/message_edit
+# POST /:BOT_TOKEN/message_edit
 Has to be called whenever a message is edited
 
 ```
@@ -30,7 +30,7 @@ Has to be called whenever a message is edited
 ```
 
 
-# POST /<BOT_TOKEN>/chat_update/new_member
+# POST /:BOT_TOKEN/chat_update/new_member
 Has to be called whenever a new member joins the chat
 
 ```
@@ -44,7 +44,7 @@ Has to be called whenever a new member joins the chat
 _* This can be the same as `newuser.id` if the member added themselves (i.e. through an invite link)_
 
 
-# POST /<BOT_TOKEN>/chat_update/left_member
+# POST /:BOT_TOKEN/chat_update/left_member
 Has to be called whenever a member left the chat
 
 ```
@@ -58,7 +58,7 @@ Has to be called whenever a member left the chat
 _* This can be the same as `leftuser.id` if the member removed themselves_
 
 
-# POST /<BOT_TOKEN>/chat_update/new_title
+# POST /:BOT_TOKEN/chat_update/new_title
 Has to be called whenever the chat gets a new title
 
 ```
@@ -70,7 +70,7 @@ Has to be called whenever the chat gets a new title
 ```
 
 
-# POST /<BOT_TOKEN>/chat_update/new_chat_photo
+# POST /:BOT_TOKEN/chat_update/new_chat_photo
 Has to be called whenever the chat gets a new photo
 
 ```
@@ -82,7 +82,7 @@ Has to be called whenever the chat gets a new photo
 ```
 
 
-# POST /<BOT_TOKEN>/chat_update/delete_chat_photo
+# POST /:BOT_TOKEN/chat_update/delete_chat_photo
 Has to be called whenever the photo of the chat gets deleted
 
 ```
@@ -94,7 +94,7 @@ Has to be called whenever the photo of the chat gets deleted
 
 
 
-# GET /<BOT_TOKEN>/generate_token/<USER_ID>
+# GET /:BOT_TOKEN/generate_token/:USER_ID
 (Re)generate a token for the user to log in with.
 
 ```
