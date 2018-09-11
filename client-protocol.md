@@ -42,7 +42,7 @@ Get a list of all titles known
 Get general information about the current user
 ```
 {
-	chats: int[]		A list of all chats the user is in
+	chats: int[]		A list of the ids of all chats the user is in
 	avatar: ?string		The URL of where the user's avatar can be found
 }
 ```
