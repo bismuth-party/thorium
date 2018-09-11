@@ -53,6 +53,7 @@ export class MemoryDatabase extends Database {
 		// Create new chat if it doesn't exist
 		if (typeof chat === 'undefined') {
 			chat = new types.Chat({
+				id: chatid,
 				history: [],
 				users: {},
 			});
