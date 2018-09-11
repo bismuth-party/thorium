@@ -18,6 +18,8 @@ export abstract class Database {
 	abstract addUser(chatid: number, user: types.User): void;
 	abstract removeUser(chatid: number, user: types.User): void;
 
+	abstract getChatsByUser(userid: number): number[];
+
 	abstract regenerateToken(userid: number): types.Token;
 
 	/**

@@ -88,6 +88,23 @@ export class MemoryDatabase extends Database {
 	}
 
 
+	getChatsByUser(userid: number): number[] {
+		let chats = [];
+
+		Object.keys(this.data)
+			.filter(x => x.startsWith(CHAT_PREFIX))
+			.forEach(key => {
+				let chat = new types.Chat(this.data[key]);
+
+				if (Object.keys(chat.users).includes(userid.toString())) {
+					chats.push(chat.id);
+				}
+			});
+
+		return chats;
+	}
+
+
 	regenerateToken(userid: number): types.Token {
 		let token = utils.randomString(TOKEN_SIZE);
 

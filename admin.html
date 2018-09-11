@@ -179,6 +179,18 @@
 			function client_extended() {
 				client('/extended');
 			}
+
+			function client_user() {
+				let token = $('client-token');
+				send('GET', '/api/' + token + '/user');
+			}
+
+			function user(url) {
+				let token = $('client-token');
+				let userid = $('client-userid');
+
+				send('GET', '/api/' + token + '/user/' + userid + url)
+			}
 		</script>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js" integrity="sha256-rxZ0ft33A1KYWHxnp8pLN9Z6CMvDdBQLdRTHK57yyWI=" crossorigin="anonymous"></script>
@@ -214,12 +226,15 @@
 				<h1>client</h1>
 				<label>token</label> <input name="client-token"><br>
 				<label>chatid</label> <input name="client-chatid"><br>
+				<label>userid</label> <input name="client-userid"><br>
 
 				<h3><input type="button" onclick="client_ping()" value="ping"></h3>
 
 				<h3><input type="button" onclick="client_chat()" value="chat"></h3>
 
 				<h3><input type="button" onclick="client_extended()" value="chat/extended"></h3>
+
+				<h3><input type="button" onclick="client_user()" value="user"></h3>
 			</div>
 		</div>
 

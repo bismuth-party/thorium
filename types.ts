@@ -162,6 +162,9 @@ export class PhotoData extends Validate {
 
 
 export class Chat extends Validate {
+	@validate
+	id: number;
+
 	@validate_array_of(History)
 	history: History[];
 

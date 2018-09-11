@@ -10,9 +10,16 @@ const fs = require('fs');
 let db = JSON.parse(fs.readFileSync('build/db.json').toString());
 
 Object.keys(db).forEach(key => {
-	// Add missing `users` object
-	if (key.startsWith('chat/') && db[key].users == undefined) {
-		db[key].users = {};
+	if (key.startsWith('chat/')) {
+		// Add missing `users` object
+		if (db[key].users == undefined) {
+			db[key].users = {};
+		}
+
+		// Add missing `id` field
+		if (typeof db[key].id !== 'number') {
+			db[key].id = parseInt(key.substring('chat/'.length));
+		}
 	}
 
 	// Replace `photos` with `photo`

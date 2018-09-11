@@ -164,7 +164,7 @@ auth_chat_router.get('/titles', (req, res) => {
 
 
 const auth_user_router = express.Router({
-	// Copy token and chatid from `router`
+	// Copy token from `router`
 	mergeParams: true,
 });
 
@@ -183,14 +183,13 @@ auth_user_router.use((req, res, next) => {
 
 // Get general information about the current user
 auth_user_router.get('/', (req, res) => {
-	let token = new types.Token(req.params.token);
+	let token = types.Token.fromString(req.params.token);
 	let userid = token.userid;
 
 	let data = <any> { };
 
-	// TODO: Get chats
-	let chats = [];
-	data.chats = chats;
+
+	data.chats = req.database.getChatsByUser(userid);
 
 
 	res.send_ok(data);
