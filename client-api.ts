@@ -107,8 +107,16 @@ auth_chat_router.get('/extended', (req, res) => {
 
 	let stats = (function(): types.ChatStatistics {
 		let messages_per_user = {};
+
 		let messages_per_hour = {};
+		for (let i=0; i <= 23; i++) {
+			messages_per_hour[i] = 0;
+		}
+
 		let messages_per_weekday = {};
+		for (let i=0; i <= 6; i++) {
+			messages_per_weekday[i] = 0;
+		}
 
 
 		function inc(obj: object, key: any): void {
